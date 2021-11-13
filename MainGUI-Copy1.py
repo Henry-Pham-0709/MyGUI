@@ -2,11 +2,7 @@ from tkinter import *
 import random
 import time
 
-score = 0
-direction = 'down'
 
-players = ["x", "o"]
-player_symbol = random.choice(players)
 class Ball:
     def __init__ (self,canvas,x,y,diameter,xVelo,yVelo,color):
         self.canvas = canvas
@@ -30,6 +26,8 @@ def openSnake(event):
     SNAKE_COLOR = "#00FF00"
     FOOD_COLOR = "#FF0000"
     BACKGROUND_COLOR = "#000000"
+    score = 0
+    direction = 'down'
 
     class Snake:
         def __init__(self):
@@ -73,7 +71,7 @@ def openSnake(event):
         snake.squares.insert(0, square)
 
         if x == food.coordinates[0] and y == food.coordinates[1]:
-            global score
+            nonlocal score
             score += 1
             label.config(text="Score:{}".format(score))
             canvas.delete("food")
@@ -91,7 +89,7 @@ def openSnake(event):
             window2.after(SPEED, next_turn, snake, food)
 
     def change_direction(new_direction):
-        global direction
+        nonlocal direction
 
         if new_direction == 'left':
             if direction != 'right':
@@ -120,7 +118,7 @@ def openSnake(event):
         return False
 
     def game_over():
-        global score
+        nonlocal score
         canvas.delete(ALL)
         canvas.create_text(canvas.winfo_width() / 2, canvas.winfo_height() / 2, font=('consolas', 70), text="GAME OVER",
                            fill="red")
@@ -196,7 +194,7 @@ def openScreen(event):
 def openTictactoe(event):
 
     def next_turn(row, column):
-        global player_symbol
+        nonlocal player_symbol
         if buttons[row][column]['text'] == "" and check_winner() is False:
             if player_symbol == players[0]:
                 buttons[row][column]['text'] = player_symbol
@@ -260,7 +258,7 @@ def openTictactoe(event):
             return True
 
     def new_game():
-        global player_symbol
+        nonlocal player_symbol
         player_symbol = random.choice(players)
         label.config(text=player_symbol + " turn")
         for row in range(3):
@@ -286,12 +284,26 @@ def openTictactoe(event):
 
     window.mainloop()
 
+def openFirstPg(event):
+    import PyGame1
+def drag_start(event):
+    widget = event.widget
+    widget.startX = event.x
+    widget.startY = event.y
+
+def drag_motion(event):
+    widget = event.widget
+    x = widget.winfo_x() - widget.startX + event.x
+    y = widget.winfo_y() - widget.startY + event.y
+    widget.place(x=x,y=y)
+
 
 window = Tk()
 window.title("WINDOWS VIP PRO")
 backgroundImage = PhotoImage(file = "C:\\Users\\User\\Downloads\\bg2.png")
 screenImage = PhotoImage(file = "C:\\Users\\User\\Downloads\\Screen.png")
 snakeImage = PhotoImage(file = "C:\\Users\\User\\Downloads\\Snake.png")
+firstPgImage = PhotoImage(file = "C:\\Users\\User\\Downloads\\first_pygame.png")
 tictactoeImage = PhotoImage(file = "C:\\Users\\User\\Downloads\\Tictactoe.png")
 canvas = Canvas(window, width = 1920, height = 1080)
 canvas.pack()
@@ -302,12 +314,20 @@ screenLabel = Label(canvas, image = screenImage, text = "Off-screen", compound =
 screenLabel.place(x=1100,y=0)
 tictactoeLabel = Label(canvas, image = tictactoeImage, text = "Tictactoe", compound = "top")
 tictactoeLabel.place(x=1000,y=100)
+firstPgLabel = Label(canvas, image = firstPgImage, text = "Pygame1", compound = "top")
+firstPgLabel.place(x=1100,y=100)
 snakeLabel.bind('<Double-Button-1>',openSnake)
 screenLabel.bind('<Double-Button-1>',openScreen)
 tictactoeLabel.bind('<Double-Button-1>',openTictactoe)
-
-
-
+firstPgLabel.bind('<Double-Button-1>',openFirstPg)
+snakeLabel.bind('<Button-1>',drag_start)
+snakeLabel.bind('<B1-Motion>',drag_motion)
+screenLabel.bind('<Button-1>',drag_start)
+screenLabel.bind('<B1-Motion>',drag_motion)
+tictactoeLabel.bind('<Button-1>',drag_start)
+tictactoeLabel.bind('<B1-Motion>',drag_motion)
+firstPgLabel.bind('<Button-1>',drag_start)
+firstPgLabel.bind('<B1-Motion>',drag_motion)
 
 
 
