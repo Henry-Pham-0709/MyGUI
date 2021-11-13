@@ -24,6 +24,8 @@ class player():
         self.jumpCount = 10
         self.left = False
         self.right = False
+        self.standLeft = False
+        self.standRight = False
         self.attacking = False
         self.walkCount = 0
         self.standCount = 0
@@ -43,12 +45,18 @@ class player():
             win.blit(pygame.transform.flip(walkRight[self.walkCount // 5], True, False), (self.x, self.y))
             self.walkCount += 1
         elif self.attacking:
-            win.blit(attack[self.attackCount // 3], (self.x, self.y))
-            self.attackCount += 1
-        else:
+            if self.standRight:
+                win.blit(attack[self.attackCount // 3], (self.x, self.y))
+                self.attackCount += 1
+            else:
+                win.blit(pygame.transform.flip(attack[self.attackCount // 3], True, False), (self.x, self.y))
+                self.attackCount += 1
+        elif self.standRight:
             win.blit(stand[self.standCount // 5], (self.x, self.y))
             self.standCount += 1
-
+        else:
+            win.blit(pygame.transform.flip(stand[self.standCount // 5], True, False), (self.x, self.y))
+            self.standCount += 1
 
 def redrawGameWindow():
     global walkCount, standCount,attackCount
@@ -73,6 +81,8 @@ while run:
         assasin.x -= assasin.vel
         assasin.left = True
         assasin.right = False
+        assasin.standLeft = True
+        assasin.standRight = False
         assasin.attacking = False
         assasin.standCount = 0
         assasin.attackCount = 0
@@ -80,6 +90,8 @@ while run:
         assasin.x += assasin.vel
         assasin.right = True
         assasin.left = False
+        assasin.standLeft = False
+        assasin.standRight = True
         assasin.attacking = False
         assasin.standCount = 0
         assasin.attackCount = 0
